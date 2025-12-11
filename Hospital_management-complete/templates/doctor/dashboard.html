@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Welcome Dr. {{ doctor.user.name }}</h2>
+
+    <h4 class="mt-4">Upcoming Appointments (Next 7 Days)</h4>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Status</th>
+                <th>Consult</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in upcoming_appointments %}
+            <tr>
+                <td><span class="badge bg-primary fs-6">#{{ ap.token }}</span></td>
+                <td>{{ ap.date }}</td>
+                <td>{{ ap.time.strftime("%H:%M") }}</td>
+                <td>{{ ap.patient.user.name }}</td>
+                <td>
+                    <span class="badge bg-info">{{ ap.status }}</span>
+                </td>
+                <td>
+                    <a href="{{ url_for('doctor_treatment', appointment_id=ap.id) }}" class="btn btn-sm btn-success">
+                        Treat
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">No upcoming appointments</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

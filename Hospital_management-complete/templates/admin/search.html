@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Search</h2>
+
+<form class="row mb-4" method="get" action="{{ url_for('admin_search') }}">
+    <div class="col-md-6">
+        <input type="text" name="q" class="form-control"
+               placeholder="Search doctors or patients..."
+               value="{{ q }}">
+    </div>
+    <div class="col-md-3 mt-2 mt-md-0">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4 class="h5">Doctor Results</h4>
+        {% if doctor_results %}
+            <ul class="list-group mb-3">
+                {% for doc in doctor_results %}
+                    <li class="list-group-item">
+                        <strong>{{ doc.user.name }}</strong><br>
+                        {{ doc.specialization }}<br>
+                        <small class="text-muted">
+                            {{ doc.user.email }} | {{ doc.user.phone or '-' }}
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No doctors found.</p>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6">
+        <h4 class="h5">Patient Results</h4>
+        {% if patient_results %}
+            <ul class="list-group mb-3">
+                {% for pat in patient_results %}
+                    <li class="list-group-item">
+                        <strong>{{ pat.user.name }}</strong><br>
+                        <small class="text-muted">
+                            {{ pat.user.email }} | {{ pat.user.phone or '-' }}
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No patients found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

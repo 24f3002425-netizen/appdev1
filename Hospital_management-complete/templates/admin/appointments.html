@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}All Appointments{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Appointments</h2>
+
+{% if appointments %}
+<div class="table-responsive">
+    <table class="table table-striped table-sm align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in appointments %}
+            <tr>
+                <td>{{ ap.id }}</td>
+                <td>{{ ap.patient.user.name }}</td>
+                <td>{{ ap.doctor.user.name }}</td>
+                <td>{{ ap.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ ap.time.strftime('%H:%M') }}</td>
+                <td>{{ ap.status }}</td>
+                <td>{{ ap.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No appointments found.</p>
+{% endif %}
+{% endblock %}

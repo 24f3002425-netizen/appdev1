@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">My Profile</h2>
+
+<form method="post" action="{{ url_for('patient_profile') }}">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control"
+                   value="{{ patient.user.name }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control"
+                   value="{{ patient.user.email }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control"
+                   value="{{ patient.user.phone or '' }}">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Age</label>
+            <input type="number" name="age" class="form-control"
+                   value="{{ patient.age or '' }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Gender</label>
+            <select name="gender" class="form-select">
+                <option value="">Select Gender</option>
+                <option value="Male"
+                  {% if patient.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female"
+                  {% if patient.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other"
+                  {% if patient.gender == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Blood Group</label>
+            <input type="text" name="blood_group" class="form-control"
+                   value="{{ patient.blood_group or '' }}">
+        </div>
+
+        <div class="col-12">
+            <label class="form-label">Address</label>
+            <textarea name="address" rows="3" class="form-control">{{ patient.address or '' }}</textarea>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        </div>
+    </div>
+</form>
+{% endblock %}

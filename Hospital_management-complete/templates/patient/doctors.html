@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Find Doctors{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Find Doctors</h2>
+
+<form class="row g-3 mb-4" method="get" action="{{ url_for('patient_doctors') }}">
+    <div class="col-md-4">
+        <label class="form-label">Specialization</label>
+        <input type="text" name="specialization" class="form-control"
+               value="{{ specialization }}" placeholder="e.g. Cardiologist">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Department</label>
+        <select name="department_id" class="form-select">
+            <option value="">All Departments</option>
+            {% for dep in departments %}
+            <option value="{{ dep.id }}"
+                {% if dep_id and dep_id|int == dep.id %}selected{% endif %}>
+                {{ dep.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+{% if doctors %}
+<div class="row">
+    {% for doc in doctors %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Dr. {{ doc.user.name }}</h5>
+                <p class="card-text mb-1">
+                    <strong>Specialization:</strong> {{ doc.specialization }}
+                </p>
+                <p class="card-text mb-1">
+                    <strong>Department:</strong>
+                    {{ doc.department.name if doc.department else '-' }}
+                </p>
+                <p class="card-text small text-muted mb-0">
+                    {{ doc.user.email }}<br>
+                    {{ doc.user.phone or '-' }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">No doctors found with the selected filters.</p>
+{% endif %}
+{% endblock %}

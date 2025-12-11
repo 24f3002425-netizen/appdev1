@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Today's Queue{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Today's Patient Queue</h2>
+    <p class="text-muted">Date: {{ date.today() }}</p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Token</th><th>Patient</th><th>Time</th><th>Status</th><th>Treatment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in appointments %}
+            <tr>
+                <td>#{{ ap.token }}</td>
+                <td>{{ ap.patient.user.name }}</td>
+                <td>{{ ap.time.strftime("%H:%M") }}</td>
+                <td>{{ ap.status }}</td>
+                <td>
+                    <a href="{{ url_for('doctor_treatment', appointment_id=ap.id) }}" class="btn btn-sm btn-primary">
+                        Add / View Treatment
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

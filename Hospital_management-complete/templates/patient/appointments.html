@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}My Appointments{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-3">My Appointments</h2>
+
+    <h4 class="mt-4">Upcoming</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th><th>Time</th><th>Doctor</th><th>Token</th><th>Status</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in upcoming %}
+            <tr>
+                <td>{{ ap.date }}</td>
+                <td>{{ ap.time.strftime("%H:%M") }}</td>
+                <td>Dr. {{ ap.doctor.user.name }} ({{ ap.doctor.specialization }})</td>
+                <td>#{{ ap.token }}</td>
+                <td>{{ ap.status }}</td>
+                <td>
+                    {% if ap.status == "Booked" %}
+                    <form method="POST" action="{{ url_for('patient_cancel_appointment', appointment_id=ap.id) }}">
+                        <button class="btn btn-sm btn-danger">Cancel</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">Past</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th><th>Time</th><th>Doctor</th><th>Token</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in past %}
+            <tr>
+                <td>{{ ap.date }}</td>
+                <td>{{ ap.time.strftime("%H:%M") }}</td>
+                <td>Dr. {{ ap.doctor.user.name }} ({{ ap.doctor.specialization }})</td>
+                <td>#{{ ap.token }}</td>
+                <td>{{ ap.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

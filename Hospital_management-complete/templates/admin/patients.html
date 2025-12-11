@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Patients{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Patients</h2>
+
+{% if patients %}
+<div class="table-responsive">
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient Details</th>
+                <th>Active</th>
+                <th style="width: 170px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pat in patients %}
+            <tr>
+                <td>{{ pat.id }}</td>
+                <td>
+                    <form class="row g-1" method="post"
+                          action="{{ url_for('admin_edit_patient', patient_id=pat.id) }}">
+                        <div class="col-12">
+                            <input type="text" class="form-control form-control-sm mb-1"
+                                   name="name" value="{{ pat.user.name }}" placeholder="Name">
+                        </div>
+                        <div class="col-12">
+                            <input type="email" class="form-control form-control-sm mb-1"
+                                   name="email" value="{{ pat.user.email }}" placeholder="Email">
+                        </div>
+                        <div class="col-12">
+                            <input type="text" class="form-control form-control-sm mb-1"
+                                   name="phone" value="{{ pat.user.phone or '' }}"
+                                   placeholder="Phone">
+                        </div>
+                        <div class="col-12">
+                            <textarea name="address"
+                                      class="form-control form-control-sm mb-1"
+                                      rows="2"
+                                      placeholder="Address">{{ pat.address or '' }}</textarea>
+                        </div>
+                        <div class="col-4">
+                            <input type="number" class="form-control form-control-sm mb-1"
+                                   name="age" value="{{ pat.age or '' }}" placeholder="Age">
+                        </div>
+                        <div class="col-4">
+                            <select name="gender"
+                                    class="form-select form-select-sm mb-1">
+                                <option value="">Gender</option>
+                                <option value="Male"
+                                  {% if pat.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female"
+                                  {% if pat.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other"
+                                  {% if pat.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control form-control-sm mb-1"
+                                   name="blood_group"
+                                   value="{{ pat.blood_group or '' }}"
+                                   placeholder="Blood Group">
+                        </div>
+                        <div class="col-12 d-flex align-items-center mb-1">
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="checkbox"
+                                       name="is_active" id="pat_active_{{ pat.id }}"
+                                       {% if pat.is_active %}checked{% endif %}>
+                                <label class="form-check-label"
+                                       for="pat_active_{{ pat.id }}">Active</label>
+                            </div>
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-primary ms-auto">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </td>
+                <td>{{ 'Yes' if pat.is_active and pat.user.is_active_user else 'No' }}</td>
+                <td>
+                    <form method="post"
+                          action="{{ url_for('admin_delete_patient', patient_id=pat.id) }}"
+                          onsubmit="return confirm('Deactivate this patient?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            Deactivate
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No patients found.</p>
+{% endif %}
+{% endblock %}

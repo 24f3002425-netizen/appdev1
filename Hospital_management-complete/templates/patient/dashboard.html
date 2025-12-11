@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Hello, {{ patient.user.name }}</h2>
+    <p class="text-muted">{{ patient.user.email }} | {{ patient.user.phone }}</p>
+
+    <h4 class="mt-4">Your Upcoming Appointments</h4>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Doctor</th>
+                <th>Status</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in upcoming_appointments %}
+            <tr>
+                <td><span class="badge bg-primary">#{{ ap.token }}</span></td>
+                <td>{{ ap.date }}</td>
+                <td>{{ ap.time.strftime("%H:%M") }}</td>
+                <td>Dr. {{ ap.doctor.user.name }}</td>
+                <td>{{ ap.status }}</td>
+                <td>
+                    {% if ap.status == "Booked" %}
+                    <form method="POST" action="{{ url_for('patient_cancel_appointment', appointment_id=ap.id) }}">
+                        <button class="btn btn-sm btn-danger">Cancel</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">No upcoming appointments</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('patient_book_appointment') }}" class="btn btn-primary w-100 mt-3">
+        Book New Appointment
+    </a>
+</div>
+
+{% endblock %}

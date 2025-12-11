@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}My Availability{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-3">My Availability</h2>
+
+    <form method="POST" class="card p-3 mb-4">
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label">Start Time</label>
+                <input type="time" name="start_time" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label">End Time</label>
+                <input type="time" name="end_time" class="form-control" required>
+            </div>
+        </div>
+        <button class="btn btn-success w-100 mt-2">Save Availability</button>
+    </form>
+
+    <h4>Upcoming Availability</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for slot in availability_list %}
+            <tr>
+                <td>{{ slot.date }}</td>
+                <td>{{ slot.start_time.strftime("%H:%M") }}</td>
+                <td>{{ slot.end_time.strftime("%H:%M") }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No availability set yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

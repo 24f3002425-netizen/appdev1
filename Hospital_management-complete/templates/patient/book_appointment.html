@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Book Appointment</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Select Doctor</label>
+            <select name="doctor_id" class="form-select" required>
+                <option value="" disabled selected>Choose a doctor</option>
+                {% for d in doctors %}
+                    <option value="{{ d.id }}">
+                        Dr. {{ d.user.name }} — {{ d.specialization }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Select Date</label>
+            <input type="date" name="date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Select Time (between 09:00 – 17:00)</label>
+            <input type="time" name="time" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Book Appointment</button>
+    </form>
+</div>
+
+{% endblock %}

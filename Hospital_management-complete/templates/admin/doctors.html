@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Doctors{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Doctors</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h4 class="h5">Add New Doctor</h4>
+        <form method="post" action="{{ url_for('admin_add_doctor') }}">
+            <div class="mb-2">
+                <label class="form-label">Name *</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Username *</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control">
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Specialization *</label>
+                <input type="text" name="specialization" class="form-control" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Department</label>
+                <select name="department_id" class="form-select">
+                    <option value="">-- Select Department --</option>
+                    {% for dep in departments %}
+                        <option value="{{ dep.id }}">{{ dep.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Password (optional)</label>
+                <input type="password" name="password" class="form-control"
+                       placeholder="Default is doctor123 if empty">
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Add Doctor</button>
+        </form>
+    </div>
+
+    <div class="col-md-8 mt-4 mt-md-0">
+        <h4 class="h5">Existing Doctors</h4>
+        {% if doctors %}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Doctor Details</th>
+                        <th>Department</th>
+                        <th>Active</th>
+                        <th style="width: 170px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in doctors %}
+                    <tr>
+                        <td>{{ doc.id }}</td>
+                        <td>
+                            <form class="row g-1" method="post"
+                                  action="{{ url_for('admin_edit_doctor', doctor_id=doc.id) }}">
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-sm mb-1"
+                                           name="name" value="{{ doc.user.name }}"
+                                           placeholder="Name">
+                                </div>
+                                <div class="col-12">
+                                    <input type="email" class="form-control form-control-sm mb-1"
+                                           name="email" value="{{ doc.user.email }}"
+                                           placeholder="Email">
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-sm mb-1"
+                                           name="phone" value="{{ doc.user.phone or '' }}"
+                                           placeholder="Phone">
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-sm mb-1"
+                                           name="specialization" value="{{ doc.specialization }}"
+                                           placeholder="Specialization">
+                                </div>
+                                <div class="col-12">
+                                    <select name="department_id"
+                                            class="form-select form-select-sm mb-1">
+                                        <option value="">-- Department --</option>
+                                        {% for dep in departments %}
+                                            <option value="{{ dep.id }}"
+                                             {% if doc.department_id == dep.id %}selected{% endif %}>
+                                                {{ dep.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12 d-flex align-items-center mb-1">
+                                    <div class="form-check me-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="is_active" id="active_doc_{{ doc.id }}"
+                                               {% if doc.is_active %}checked{% endif %}>
+                                        <label class="form-check-label"
+                                               for="active_doc_{{ doc.id }}">Active</label>
+                                    </div>
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-primary ms-auto">
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>{{ doc.department.name if doc.department else '-' }}</td>
+                        <td>{{ 'Yes' if doc.is_active and doc.user.is_active_user else 'No' }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{{ url_for('admin_delete_doctor', doctor_id=doc.id) }}"
+                                  onsubmit="return confirm('Deactivate this doctor?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Deactivate
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-muted">No doctors added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
